@@ -80,6 +80,8 @@ def run():
                 terminado = True
         except ValueError as ve:
             print(ve)
+    if intentos -1 == limite_intentos:
+        print("Te quedaste sin intentos, la palabra era: " + word)
     
 if __name__ == '__main__':
     run()
