@@ -1,7 +1,7 @@
 [project]
 name = "hanged_man"
-version = "0.1.0"
-description = "Hanged Man"
+version = "1.0.0"
+description = "Un juego clásico del ahorcado implementado en Python con arquitectura hexagonal."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
