@@ -1,22 +1,30 @@
-from app.domain.console import Console
+from app.domain.game_state import GameState
 from app.domain.level import Level
-from app.domain.word_repository import WordRepository
+from app.domain.word import Word
 
 
 class Application:
-    def __init__(self, console: Console, repository: WordRepository):
-        self.console = console
-        self.repository = repository
+    def __init__(self, state: GameState):
+        self.state = state
 
-    def run(self):
-        self.console.welcome()
+    def init(self, word: Word, level: Level) -> None:
+        self.state.set_word(word)
+        self.state.set_level(level)
 
-        word = self.repository.get_random_word()
-        level = self.console.get_level()
+    def validate_letter(self, letter: str) -> None:
+        word = self.state.get_word()
+        for index, value in enumerate(word.value):
+            if value == letter:
+                word.mask[index] = True
+        self.state.set_word(word)
+        self.state.increment_count()
 
-        finished = False
+    def validate_word(self) -> tuple[bool, bool]:
+        word = self.state.get_word()
+        level = self.state.get_level()
+
         count_limit = -1
-        count = 1
+        count = self.state.get_count()
         match level:
             case Level.LEVEL_1:
                 word.mask[0] = True
@@ -28,17 +36,6 @@ class Application:
             case Level.GOD:
                 count_limit = len(word)
 
-        self.console.interface(word, count_limit)
-        while not finished and (count_limit == -1 or count <= count_limit):
-            letter_input = self.console.get_letter()
-
-            for index, letter in enumerate(word.value):
-                if letter == letter_input:
-                    word.mask[index] = True
-            self.console.interface(word, count_limit - count)
-            count += 1
-            if False not in word.mask:
-                self.console.win(word.value)
-                finished = True
-        if count - 1 == count_limit:
-            self.console.loose(word.value)
+        win = (False not in word.mask) and (count_limit == -1 or count <= count_limit)
+        loose = not win and count_limit != -1 and count > count_limit
+        return win, loose

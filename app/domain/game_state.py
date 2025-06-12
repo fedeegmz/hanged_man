@@ -4,31 +4,27 @@ from app.domain.level import Level
 from app.domain.word import Word
 
 
-class Console(ABC):
+class GameState(ABC):
     @abstractmethod
-    def welcome(self) -> None:
+    def get_word(self) -> Word | None:
         pass
 
     @abstractmethod
-    def interface(self, word: Word, count: int = 0) -> None:
+    def get_level(self) -> Level | None:
         pass
 
-    @staticmethod
     @abstractmethod
-    def get_level() -> Level:
+    def get_count(self) -> int:
         pass
 
-    @staticmethod
     @abstractmethod
-    def get_letter() -> str:
+    def set_word(self, value: Word) -> None:
         pass
 
-    @staticmethod
     @abstractmethod
-    def win(word: str) -> None:
+    def set_level(self, value: Level) -> None:
         pass
 
-    @staticmethod
     @abstractmethod
-    def loose(word: str) -> None:
+    def increment_count(self) -> None:
         pass
